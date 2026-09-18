@@ -191,17 +191,20 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
     setSelectedDate(undefined);
   }
   console.log('Cliente Unico', clients?.id);
+
   async function handleAgend() {
     setMessageApi(null);
     console.log('dados do agendamento', { clients, selectedDate, selectService, selectedTime });
-    if (!clients || !selectService || !selectedDate) {
+    if (!clients || !selectService || !selectedDate || !selectedTime) {
       setMessageApi('Preencha todos os campos');
+      return;
     }
 
     try {
       const data = {
         clientName: clients?.name, // Extrai 'Flavio G Silva' do objeto
         userId: clients?.id, // Extrai o ID do cliente
+        serviceId: selectId || selectService?._id, // Envia o ID do serviço selecionado
         estimatedDuration: selectService?.duration, // Extrai a duração (ex: 30)
         totalPrice: selectService?.price, // Extrai o preço (ex: 40)
         selectedDate: selectedDate, // Passa a data selecionada

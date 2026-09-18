@@ -3,7 +3,7 @@ import { getClients } from '../Clients';
 import { fetchHistoricoAgendamento } from '../agendamentosGet';
 import { clientProps, IQueueEntry } from '@/app/api/types';
 import { format } from 'date-fns';
-import { User, CalendarDays } from 'lucide-react';
+import { User, CalendarDays, Scissors } from 'lucide-react';
 import { Status } from '@/app/api/types/status';
 import { Notification } from '../notificationDate';
 
@@ -18,6 +18,8 @@ export function Historico() {
     queryFn: () => fetchHistoricoAgendamento(clients?.id ?? null),
     enabled: !!clients?.id,
   });
+
+  console.log('Agendamentos agrupados', agendamentos);
 
   const sheduledStatus = agendamentos?.filter((ag) => ag.status === Status.SCHEDULED);
   const sheduledStatusFinish = agendamentos?.filter((ag) => ag.status === Status.COMPLETED);
@@ -64,6 +66,14 @@ export function Historico() {
                     </span>
                     {sh.clientName}
                   </h2>
+                  {sh.nomesDosServicos && sh.nomesDosServicos.length > 0 && (
+                    <p className="flex items-center gap-2 p-2 text-sm text-gray-800 font-medium">
+                      <span>
+                        <Scissors size={18} color="#00ff" />
+                      </span>
+                      {sh.nomesDosServicos.join(', ')}
+                    </p>
+                  )}
                   <p className="flex items-center gap-2 p-2">
                     <span>
                       <CalendarDays color="#00ff" />
@@ -109,6 +119,15 @@ export function Historico() {
                   {ag.clientName}
                 </h2>
               </div>
+
+              {ag.nomesDosServicos && ag.nomesDosServicos.length > 0 && (
+                <p className="flex items-center gap-2 p-2 text-sm text-gray-800 font-medium">
+                  <span>
+                    <Scissors size={18} color="#00ff" />
+                  </span>
+                  {ag.nomesDosServicos.join(', ')}
+                </p>
+              )}
 
               <p className="flex items-center gap-2 p-2">
                 <span>

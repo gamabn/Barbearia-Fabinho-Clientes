@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import clientPromise from '@/app/lib/mongodb';
 import { Status } from '../types/status';
+import { ObjectId } from 'mongodb';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +14,8 @@ export async function POST(request: NextRequest) {
       selectedDate,
       selectedTime,
       barberId,
+      serviceId,
+      serviceIds,
     } = body;
 
     console.log('Id do usuario', userId);
@@ -58,6 +61,30 @@ export async function POST(request: NextRequest) {
     const db = client.db('test');
 
     const result = await db.collection('queueentries').insertOne(documentToInsert);
+
+    // Salva a relação com o(s) serviço(s) na coleção 'QueueService'
+    const servicesList = serviceIds || (serviceId ? [serviceId] : []);
+    console.log('[API agendar] serviceId recebido:', serviceId, 'servicesList:', servicesList);
+
+    if (servicesList.length > 0) {
+      const queueServicesDocs = servicesList
+        .filter((sId: unknown) => sId && ObjectId.isValid(String(sId)))
+        .map((sId: unknown) => ({
+          queueEntryId: result.insertedId,
+          serviceId: new ObjectId(String(sId)),
+        }));
+
+      if (queueServicesDocs.length > 0) {
+        await db.collection('QueueService').insertMany(queueServicesDocs);
+        console.log('[API agendar] Gravado com sucesso na QueueService:', queueServicesDocs);
+      } else {
+        console.warn(
+          '[API agendar] Nenhum serviceId válido encontrado para gravar na QueueService'
+        );
+      }
+    } else {
+      console.warn('[API agendar] Nenhum serviceId informado na requisição');
+    }
 
     return NextResponse.json(
       {

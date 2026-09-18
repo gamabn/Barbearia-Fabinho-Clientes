@@ -38,6 +38,15 @@ export interface IQueueEntry {
   duration?: number | Long | null;
 }
 
+export interface IQueueEntryWithServices {
+  _id: ObjectId;
+  clientName: string;
+  status: string;
+  scheduledAt: Date;
+  totalPrice: number;
+  nomesDosServicos: string[];
+}
+
 export interface IQueueService {
   _id?: ObjectId;
   queueEntryId: ObjectId;

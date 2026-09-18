@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     const startDate = new Date(`${date}T00:00:00.000Z`);
     const endDate = new Date(`${date}T23:59:59.999Z`);
 
+    // Busca apenas os agendamentos do dia para obter os horários ocupados
     const agendamentos = await db
       .collection('queueentries')
       .find({
@@ -27,23 +28,18 @@ export async function GET(request: NextRequest) {
       })
       .toArray();
 
-    //const occupiedTimes = agendamentos.map((agendamento) => {
-    //   const date = new Date(agendamento.scheduledAt);
-
-    //return date.toISOString().substring(11, 16);
-    //});
-
-    const occupiedTimes = agendamentos.map((agendamento) => {
-      const date = new Date(agendamento.scheduledAt);
-
-      return date.toLocaleTimeString('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
+    const occupiedTimes = agendamentos
+      .filter((agendamento) => agendamento.scheduledAt)
+      .map((agendamento) => {
+        const dateObj = new Date(agendamento.scheduledAt);
+        return dateObj.toLocaleTimeString('pt-BR', {
+          timeZone: 'America/Sao_Paulo',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
       });
-    });
-    //console.log('Agendamentos xccc', agend)
+
     return NextResponse.json(occupiedTimes);
   } catch (error) {
     console.error(error);
