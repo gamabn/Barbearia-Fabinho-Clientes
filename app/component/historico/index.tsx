@@ -1,24 +1,29 @@
-import { useQuery } from '@tanstack/react-query';
-import { getClients } from '../Clients';
-import { fetchHistoricoAgendamento } from '../agendamentosGet';
-import { clientProps, IQueueEntry } from '@/app/api/types';
+///import { useQuery } from '@tanstack/react-query';
+//import { getClients } from '../Clients';
+//import { fetchHistoricoAgendamento } from '../agendamentosGet';
+//import { clientProps, IQueueEntryWithServices } from '@/app/api/types';
 import { format } from 'date-fns';
 import { User, CalendarDays, Scissors } from 'lucide-react';
 import { Status } from '@/app/api/types/status';
-import { Notification } from '../notificationDate';
+//import { Notification } from '../notificationDate';
+import { useAgendamentosHoook } from '../hook/useAgendamentos';
 
 export function Historico() {
-  const { data: clients } = useQuery<clientProps>({
-    queryKey: ['clients'],
-    queryFn: getClients,
-  });
+  // const { clients } = useClientHook();
+  const { agendamentos, loading } = useAgendamentosHoook();
 
-  const { data: agendamentos, isLoading: loading } = useQuery<IQueueEntry[]>({
-    queryKey: ['agendamentos', clients?.id],
-    queryFn: () => fetchHistoricoAgendamento(clients?.id ?? null),
-    enabled: !!clients?.id,
-  });
+  //================================================================================================
+  // const {data: clients } = useQuery<clientProps>({
+  //   queryKey: ['clients'],
+  //   queryFn: getClients,
+  //  });
 
+  // const { data: agendamentos, isLoading: loading } = useQuery<IQueueEntryWithServices[]>({
+  // queryKey: ['agendamentos', clients?.id],
+  // queryFn: () => fetchHistoricoAgendamento(clients?.id ?? null),
+  // enabled: !!clients?.id,
+  // });
+  //===========================================================================================
   console.log('Agendamentos agrupados', agendamentos);
 
   const sheduledStatus = agendamentos?.filter((ag) => ag.status === Status.SCHEDULED);
@@ -41,7 +46,6 @@ export function Historico() {
   // const formattedDate = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
   return (
     <div className="w-full bg-white h-screen p-3 text-black flex flex-col">
-      <Notification />
       <h1 className="text-center p-2 font-bold text-lg">Historico de agendamentos</h1>
 
       <div className="border-b-2 border-black  p-2  mb-2">
@@ -66,7 +70,7 @@ export function Historico() {
                     </span>
                     {sh.clientName}
                   </h2>
-                  {sh.nomesDosServicos && sh.nomesDosServicos.length > 0 && (
+                  {sh?.nomesDosServicos && sh.nomesDosServicos.length > 0 && (
                     <p className="flex items-center gap-2 p-2 text-sm text-gray-800 font-medium">
                       <span>
                         <Scissors size={18} color="#00ff" />

@@ -2,16 +2,17 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { getClients } from '@/app/component/Clients';
-import { Agend } from '@/app/component/Service-barber';
+//import { getClients } from '@/app/component/Clients';
+//import { Agend } from '@/app/component/Service-barber';
 import { User, Phone, CalendarDays, Clock, CheckCircle } from 'lucide-react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { ptBR } from 'date-fns/locale';
 
-import { clientProps, serviceProps } from '@/app/api/types';
+import { serviceProps } from '@/app/api/types';
 import { format, isToday } from 'date-fns';
 import { getAgendamentos } from '@/app/component/getAgendamentos';
+import { useClientHook, useServiceHook } from '@/app/component/hook/useAgendamentos';
 
 // Função utilitária para gerar os horários de funcionamento (ex: 08:00 às 18:00)
 function generateTimeSlots(startHour = 8, endHour = 18, intervalMinutes = 30): string[] {
@@ -45,6 +46,9 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   const resumoRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<boolean>(false);
 
+  const { clients } = useClientHook();
+  const { services, servicesLoading } = useServiceHook();
+
   console.log('testando o agendar', agendar);
 
   useEffect(() => {
@@ -61,16 +65,21 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   // Lista fixa de horários do estabelecimento
   const timeSlots = useMemo(() => generateTimeSlots(8, 18, 30), []);
 
-  const { data: clients } = useQuery<clientProps>({
-    queryKey: ['clients'],
-    queryFn: getClients,
-  });
-  console.log('Id do cliente', clients);
-  const { data: services = [], isLoading: servicesLoading } = useQuery<serviceProps[]>({
-    queryKey: ['services'],
-    queryFn: Agend,
-  });
+  //===================================================================
+  // const { data: clients } = useQuery<clientProps>({
+  //  queryKey: ['clients'],
+  //  queryFn: getClients,
+  // });
+  //=====================================================================
 
+  // console.log('Id do cliente', clients);
+
+  //==========================================================================================
+  // const { data: services = [], isLoading: servicesLoading } = useQuery<serviceProps[]>({
+  //  queryKey: ['services'],
+  //  queryFn: Agend,
+  // });
+  //==================================================================
   // const {data: agend = [], isLoading:loadindAgend} = useQuery<any>({
   // queryKey: ["agendamentos"],
   //  queryFn: getAgendamentos

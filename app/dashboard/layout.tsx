@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';
+import { Notification } from '../component/notificationDate';
 //import { Header } from "../component/header";
 
 export default async function LayoutDashboard({ children }: { children: ReactNode }) {
@@ -19,7 +20,7 @@ export default async function LayoutDashboard({ children }: { children: ReactNod
   return (
     <div className="min-h-screen">
       {/*<Header />*/}
-      {children}
+      <Notification>{children}</Notification>
     </div>
   );
 }

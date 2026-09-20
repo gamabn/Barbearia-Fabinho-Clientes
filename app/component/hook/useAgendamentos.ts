@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { clientProps, IQueueEntry } from '@/app/api/types';
+import { clientProps, IQueueEntryWithServices, serviceProps } from '@/app/api/types';
 
 export async function getClients(): Promise<clientProps> {
   const response = await fetch('/api/login-client', {
@@ -31,6 +31,30 @@ export async function fetchHistoricoAgendamento(userId: string | null) {
   return data;
 }
 
+export async function useAGetService() {
+  const response = await fetch('api/service', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  const data = await response.json();
+  console.log('Serviços do barbeiro', data);
+  return data;
+}
+export function useServiceHook() {
+  const { data: services = [], isLoading: servicesLoading } = useQuery<serviceProps[]>({
+    queryKey: ['services'],
+    queryFn: useAGetService,
+  });
+  return { services, servicesLoading };
+}
+
 export function useClientHook() {
   const {
     data: clients,
@@ -46,9 +70,9 @@ export function useClientHook() {
 
 export function useAgendamentosHoook() {
   const { clients } = useClientHook();
-  const { data: agendamentos, isLoading: loading } = useQuery<IQueueEntry[]>({
+  const { data: agendamentos, isLoading: loading } = useQuery<IQueueEntryWithServices[]>({
     queryKey: ['agendamentos', clients?.id],
-    queryFn: () => fetchHistoricoAgendamento(clients?.id ?? null),
+    queryFn: () => fetchHistoricoAgendamento(clients?.id ? String(clients.id) : null),
     enabled: !!clients?.id,
   });
   return { agendamentos, loading };
