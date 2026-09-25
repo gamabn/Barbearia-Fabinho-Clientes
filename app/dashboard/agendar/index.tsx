@@ -13,6 +13,7 @@ import { serviceProps } from '@/app/api/types';
 import { format, isToday } from 'date-fns';
 import { getAgendamentos } from '@/app/component/getAgendamentos';
 import { useClientHook, useServiceHook } from '@/app/component/hook/useAgendamentos';
+import { InstallAppButton } from '../../component/InstallButton';
 
 // Função utilitária para gerar os horários de funcionamento (ex: 08:00 às 18:00)
 function generateTimeSlots(startHour = 8, endHour = 18, intervalMinutes = 30): string[] {
@@ -250,6 +251,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   if (active) {
     return (
       <div className="flex flex-col flex-grow items-center justify-center bg-white w-full h-screen text-black p-6">
+        <InstallAppButton />
         <CheckCircle className="w-24 h-24 text-green-500 mb-6 mx-auto" />{' '}
         {/* Adicionado mx-auto para centralizar o ícone se a div pai for flex-col */}
         <h1 className="text-3xl font-bold mb-4">Agendamento Confirmado!</h1>
@@ -278,7 +280,8 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
 
   return (
     <div className="flex flex-col p-3 bg-white text-black min-h-screen overflow-auto py-2 mb-3">
-      <h1 className="text-2xl text-center font-bold">Agendar serviço</h1>
+      <h1 className="text-2xl text-center font-bold max-md:text-md">Agendar serviço</h1>
+      <InstallAppButton />
 
       <section className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-center gap-2 border-b border-gray-300 pb-2">

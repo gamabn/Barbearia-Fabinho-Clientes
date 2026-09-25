@@ -12,6 +12,7 @@ import { useState } from 'react';
 //import { useQuery } from "@tanstack/react-query"
 //import { getClients } from "../component/Clients"
 import { useRouter } from 'next/navigation';
+import { InstallAppButton } from '../component/InstallButton';
 
 const loginSchema = z.object({
   phone: z
@@ -89,6 +90,8 @@ export default function Login() {
   };
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+      <InstallAppButton />
+
       <h1 className="text-2xl font-bold text-gray-800 mb-4 max-sm:text-xl">Login</h1>
 
       <Image

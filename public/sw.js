@@ -1,11 +1,17 @@
 const CACHE_NAME = 'barbearia-fabinho-v1';
 
-const urlsToCache = ['/', '/icon-192.png', '/icon-512.png'];
+const urlsToCache = ['/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const url of urlsToCache) {
+        try {
+          await cache.add(url);
+        } catch (err) {
+          console.warn('Falha ao armazenar em cache:', url, err);
+        }
+      }
     })
   );
 
@@ -27,6 +33,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Ignora requisições de API e extensões
+  if (event.request.url.includes('/api/') || !event.request.url.startsWith('http')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       return cachedResponse || fetch(event.request);
