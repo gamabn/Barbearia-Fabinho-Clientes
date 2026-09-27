@@ -101,14 +101,16 @@ export function InstallAppButton() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={handleInstall}
-        className="flex items-center justify-center gap-2 rounded-lg bg-black px-4 py-2 font-semibold text-white shadow-lg hover:bg-neutral-800 transition-all cursor-pointer text-sm my-2"
-      >
-        <Download size={18} className="text-amber-400" />
-        <span>Instalar aplicativo</span>
-      </button>
+      <div className="flex items-center justify-center">
+        <button
+          type="button"
+          onClick={handleInstall}
+          className="flex items-center w-lg max-sm:w-sm justify-center gap-2 rounded-lg bg-black px-4 py-2 font-semibold text-white shadow-lg hover:bg-neutral-800 transition-all cursor-pointer text-sm my-2"
+        >
+          <Download size={18} className="text-amber-400" />
+          <span>Instalar aplicativo</span>
+        </button>
+      </div>
 
       {/* Modal explicativo caso o prompt nativo não esteja disponível no momento */}
       {showInstructions && (

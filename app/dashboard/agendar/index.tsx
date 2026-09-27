@@ -251,7 +251,6 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   if (active) {
     return (
       <div className="flex flex-col flex-grow items-center justify-center bg-white w-full h-screen text-black p-6">
-        <InstallAppButton />
         <CheckCircle className="w-24 h-24 text-green-500 mb-6 mx-auto" />{' '}
         {/* Adicionado mx-auto para centralizar o ícone se a div pai for flex-col */}
         <h1 className="text-3xl font-bold mb-4">Agendamento Confirmado!</h1>

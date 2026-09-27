@@ -23,7 +23,7 @@ const loginSchema = z.object({
       'O número de telefone deve estar no formato (DD) 99999-9999'
     ),
 });
-//================================================
+//================================================ pagina de login
 // phone: z.string().refine(
 // (value) =>
 //    /^(?:\(\d{2}\)\s?)?\d{9}$/.test(value) || // (DD) 999999999
@@ -37,7 +37,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-export default function Login() {
+export function Login() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | ''>('');
   const [loading, setLoading] = useState(false);
@@ -51,6 +51,7 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginForm) => {
+    console.log('dados do login...', data);
     setLoading(true);
     setErrorMessage('');
 
@@ -69,11 +70,16 @@ export default function Login() {
       });
       const result = await response.json();
 
+      console.log('Status do login:', response.status);
+      console.log('Resultado do login:', result);
+
       if (!response.ok) {
         // throw new Error('Erro ao realizar login');
         setErrorMessage(result.error || 'Telefone ou senha inválidos.');
         return;
       }
+
+      console.log('Login realizado. Redirecionando...');
       // window.location.href = "/dashboard";
       router.replace('/dashboard');
       //  router.push('/dashboard')
@@ -156,54 +162,4 @@ export default function Login() {
       </form>
     </div>
   );
-
-  {
-    /*}  return(
-   <div className="flex flex-col items-center justify-center h-screen">
-    
-        <h1 "className="text-2xl font-bold text-gray-800 mb-4 max-sm:text-xl>Fabinho Barbearia</h1>
-
-        <Image 
-        src="/icon-192.png" 
-        alt="Logo" 
-        width={100} 
-        height={100} 
-        loading="eager"
-        className="mb-4"
-        />
-
-        <form 
-        className="flex flex-col w-96 max-sm:w-80  p-6  bg-white max-sm:p-4"
-        onSubmit={handleSubmit(onSubmit)}>
-        <label className="mb-1 text-lg font-medium text-gray-700 max-sm:text-sm">Telefone</label>
-                    <Input 
-                    type="text"
-                    name="phone"
-                    placeholder="Digite seu telefone"
-                    register={register}
-                    error={errors.phone?.message}
-                    />   
-
-                  {/*}  <input  
-                       type="text"
-                        placeholder="Digite seu telefone"
-                        {...register("phone")}
-                        className="border p-2"
-                    > 
-        
-        <button
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors max-sm:text-sm"
-        type="submit">
-            {loading ? <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" aria-label="Carregando" /> : "Cadastrar"} </button>
-
-            <Link 
-                href="/cadastro"
-                className="text-sm text-center font-extralight text-[#2323da] py-3 hover:underline cursor-pointer "
-                >
-                Se nao tem conta? Cadastre-se
-                </Link>
-        </form>
-   </div>
-    )   */
-  }
 }

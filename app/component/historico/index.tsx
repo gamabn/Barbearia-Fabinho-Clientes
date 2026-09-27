@@ -24,7 +24,7 @@ export function Historico() {
   // enabled: !!clients?.id,
   // });
   //===========================================================================================
-  console.log('Agendamentos agrupados', agendamentos);
+  // console.log('Agendamentos agrupados', agendamentos);
 
   const sheduledStatus = agendamentos?.filter((ag) => ag.status === Status.SCHEDULED);
   const sheduledStatusFinish = agendamentos?.filter((ag) => ag.status === Status.COMPLETED);

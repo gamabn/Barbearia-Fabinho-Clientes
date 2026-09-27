@@ -3,16 +3,29 @@
 import { Agendar } from './agendar';
 import { useState } from 'react';
 import { Historico } from '../component/historico';
+import { useRouter } from 'next/navigation';
+import { LogOut } from 'lucide-react';
 
 export default function Dashboard() {
+  const router = useRouter();
   const [active, setActive] = useState<boolean>(true);
 
   function onMudarAba() {
     setActive(false);
   }
+  async function handleLogout() {
+    const res = await fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    await res.json();
+    router.replace('/');
+  }
 
   return (
-    <div className="flex flex-col bg-white text-black min-h-screen ">
+    <div className="flex flex-col relative bg-white text-black min-h-screen ">
       <div className="flex items-center justify-around p-3 border-b">
         <button
           onClick={() => setActive(true)}
@@ -27,8 +40,12 @@ export default function Dashboard() {
         >
           Historico
         </button>
+        <button onClick={handleLogout} className="absolute p-2  right-3 cursor-pointer">
+          <LogOut size={28} color="rgb(255, 0, 0)" />
+        </button>
       </div>
       {/* Uso de operador ternário para trocar a exibição */}
+
       {active ? <Agendar agendar={active} onMudarAba={onMudarAba} /> : <Historico />}
     </div>
   );

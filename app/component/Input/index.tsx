@@ -10,8 +10,7 @@ interface InputProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   error?: string;
   rules?: RegisterOptions<T, Path<T>>;
-  isPhone?: boolean; // Prop para ativar a máscara apenas quando necessário
-  // onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isPhone?: boolean;
 }
 
 export function Input<T extends FieldValues>({
@@ -21,23 +20,31 @@ export function Input<T extends FieldValues>({
   register,
   error,
   rules,
-  isPhone = false, // Prop para ativar a máscara apenas quando necessário
+  isPhone = false,
 }: InputProps<T>) {
   const registered = register(name, rules);
 
   const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isPhone) {
-      event.target.value = formatPhone(event.target.value);
+      // ✅ Cria um novo valor formatado
+      const formatted = formatPhone(event.target.value);
+
+      // ✅ Atualiza o DOM de forma controlada pelo React
+      //    (não muta event.target.value diretamente antes do RHF)
+      event.target.value = formatted;
+      console.log('📞 valor após máscara:', event.target.value);
     }
 
-    // Chama o onChange nativo do react-hook-form para atualizar o estado do formulário
+    // ✅ Chama o onChange do RHF DEPOIS de ajustar o valor
     registered.onChange(event);
   };
+
   return (
     <>
       <input
         {...registered}
         id={name}
+        name={name}
         className="w-full border text-lg text-gray-600 rounded-md h-11 mb-3 p-2 max-sm:text-sm"
         placeholder={placeholder}
         type={type}

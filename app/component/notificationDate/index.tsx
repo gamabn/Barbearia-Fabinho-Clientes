@@ -44,72 +44,73 @@ export function Notification({ children }: { children: React.ReactNode }) {
         Se não houver agendamento futuro, NADA é desenhado na tela (zero bordas vazias).
       */}
       {active && notificacoesFuturas.length > 0 && (
-        <div className="flex flex-col bg-white border-2 border-black shadow-xl p-4 m-3 rounded-lg text-black transition-all">
-          <div className="flex justify-between items-center mb-2 pb-1 border-b border-gray-200">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60  backdrop-blur-xs">
+          {/*  <div className="flex flex-col bg-white border-2 border-black shadow-xl p-4 m-3 rounded-lg text-black transition-all">*/}
+          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl text-black">
             <h2 className="text-sm font-bold text-red-600 uppercase tracking-wide">
               Lembrete de Agendamento
             </h2>
             <button
               onClick={() => setActive(false)}
-              className="text-gray-500 hover:text-black p-1 transition-colors cursor-pointer"
+              className="absolute top-3 right-3 text-gray-500 hover:text-black p-1 cursor-pointer"
               title="Fechar aviso"
             >
               <X size={18} />
             </button>
-          </div>
 
-          <div className="flex flex-col gap-3">
-            {notificacoesFuturas.map((ag) => {
-              const dataAgendamento =
-                typeof ag.scheduledAt === 'string' ? parseISO(ag.scheduledAt) : ag.scheduledAt;
-              const agora = new Date();
+            <div className="flex flex-col gap-3">
+              {notificacoesFuturas.map((ag) => {
+                const dataAgendamento =
+                  typeof ag.scheduledAt === 'string' ? parseISO(ag.scheduledAt) : ag.scheduledAt;
+                const agora = new Date();
 
-              const diasFaltando = differenceInDays(dataAgendamento, agora);
-              const horasFaltando = differenceInHours(dataAgendamento, agora);
+                const diasFaltando = differenceInDays(dataAgendamento, agora);
+                const horasFaltando = differenceInHours(dataAgendamento, agora);
 
-              let mensagem = '';
-              if (diasFaltando > 0) {
-                mensagem = `Faltam ${diasFaltando} ${diasFaltando === 1 ? 'dia' : 'dias'} para o seu serviço agendado.`;
-              } else if (horasFaltando > 0) {
-                mensagem = `Seu serviço é hoje! Restam apenas ${horasFaltando} ${horasFaltando === 1 ? 'hora' : 'horas'}.`;
-              } else {
-                mensagem = `Seu serviço começará em menos de uma hora! Fique atento.`;
-              }
+                let mensagem = '';
+                if (diasFaltando > 0) {
+                  mensagem = `Faltam ${diasFaltando} ${diasFaltando === 1 ? 'dia' : 'dias'} para o seu serviço agendado.`;
+                } else if (horasFaltando > 0) {
+                  mensagem = `Seu serviço é hoje! Restam apenas ${horasFaltando} ${horasFaltando === 1 ? 'hora' : 'horas'}.`;
+                } else {
+                  mensagem = `Seu serviço começará em menos de uma hora! Fique atento.`;
+                }
 
-              const itemTotal = new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL',
-              }).format(ag.totalPrice || 0);
+                const itemTotal = new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                }).format(ag.totalPrice || 0);
 
-              const servicosFormatados = Array.isArray(ag.nomesDosServicos)
-                ? ag.nomesDosServicos.join(', ')
-                : ag.nomesDosServicos;
+                const servicosFormatados = Array.isArray(ag.nomesDosServicos)
+                  ? ag.nomesDosServicos.join(', ')
+                  : ag.nomesDosServicos;
 
-              return (
-                <div
-                  key={String(ag._id)}
-                  className="rounded-md  bg-gray-50 p-3 border border-gray-400"
-                >
-                  <p className="text-base text-red-600 font-semibold">{mensagem}</p>
+                return (
+                  <div
+                    key={String(ag._id)}
+                    className="rounded-md  bg-gray-50 p-3 border border-gray-400"
+                  >
+                    <p className="text-base text-red-600 font-semibold">{mensagem}</p>
 
-                  <div className="mt-2 text-sm text-gray-800 flex flex-col gap-1">
-                    <p className="flex items-center gap-2">
-                      <User size={16} color="#00ff" />
-                      <span className="font-medium">{ag.clientName}</span>
-                    </p>
-
-                    {servicosFormatados && (
+                    <div className="mt-2 text-sm text-gray-800 flex flex-col gap-1">
                       <p className="flex items-center gap-2">
-                        <Scissors size={16} color="#00ff" />
-                        <span>{servicosFormatados}</span>
+                        <User size={16} color="#00ff" />
+                        <span className="font-medium">{ag.clientName}</span>
                       </p>
-                    )}
 
-                    <p className="text-base text-green-600 font-bold mt-1">{itemTotal}</p>
+                      {servicosFormatados && (
+                        <p className="flex items-center gap-2">
+                          <Scissors size={16} color="#00ff" />
+                          <span>{servicosFormatados}</span>
+                        </p>
+                      )}
+
+                      <p className="text-base text-green-600 font-bold mt-1">{itemTotal}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
