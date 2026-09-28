@@ -95,7 +95,7 @@ export default function Login() {
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center bg-white justify-center h-screen">
       <InstallAppButton />
 
       <h1 className="text-2xl font-bold text-gray-800 mb-4 max-sm:text-xl">Login</h1>
@@ -110,7 +110,7 @@ export default function Login() {
       />
 
       <form
-        className="flex flex-col w-96 max-sm:w-80  p-6  bg-white max-sm:p-4"
+        className="flex flex-col w-96 max-sm:w-full  p-6  bg-white max-sm:p-4"
         onSubmit={handleSubmit(onSubmit)}
       >
         {/*} <input
@@ -123,7 +123,9 @@ export default function Login() {
             {errorMessage}
           </div>
         )}
-        <label className="mb-1 text-lg font-medium text-gray-700 max-sm:text-sm">Telefone</label>
+        <label className="mb-1 text-lg font-medium text-gray-700 max-sm:text-sm max-md:w-full">
+          Telefone
+        </label>
         <Input
           placeholder="Telefone"
           type="text"
