@@ -45,7 +45,7 @@ export function Historico() {
   }
   // const formattedDate = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
   return (
-    <div className="w-full bg-white h-screen p-3 text-black flex flex-col">
+    <div className="w-full bg-white  min-h-screen p-3 text-black flex flex-col">
       <h1 className="text-center p-2 font-bold text-lg">Historico de agendamentos</h1>
 
       <div className="border-b-2 border-black w-full  p-2  mb-2">

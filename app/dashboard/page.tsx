@@ -29,18 +29,18 @@ export default function Dashboard() {
       <div className="flex items-center justify-center gap-3 p-3 border-b">
         <button
           onClick={() => setActive(true)}
-          className={`rounded-lg p-2 text-white font-mediun ${active ? 'bg-blue-500' : 'bg-black'}`}
+          className={`rounded-lg p-2 text-white text-md font-light ${active ? 'bg-blue-500' : 'bg-black'}`}
         >
           Agendar
         </button>
 
         <button
           onClick={() => setActive(false)}
-          className={`rounded-lg p-2 text-white font-mediun ${active ? 'bg-black' : 'bg-blue-500'}`}
+          className={`rounded-lg p-2 text-md font-light text-white font-mediun ${active ? 'bg-black' : 'bg-blue-500'}`}
         >
           Historico
         </button>
-        <button onClick={handleLogout} className="absolute p-2  right-3 cursor-pointer">
+        <button onClick={handleLogout} className="absolute p-2  right-1 cursor-pointer">
           <LogOut size={23} color="rgb(255, 0, 0)" />
         </button>
       </div>
