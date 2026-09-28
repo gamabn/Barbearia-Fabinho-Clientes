@@ -48,7 +48,7 @@ export function Historico() {
     <div className="w-full bg-white h-screen p-3 text-black flex flex-col">
       <h1 className="text-center p-2 font-bold text-lg">Historico de agendamentos</h1>
 
-      <div className="border-b-2 border-black  p-2  mb-2">
+      <div className="border-b-2 border-black w-full  p-2  mb-2">
         {sheduledStatus && (
           <div className="">
             <h2 className="text-center text-red-500 text-lg font-bold">
@@ -95,7 +95,7 @@ export function Historico() {
         )}
       </div>
 
-      <div className="w-full mt-2">
+      <div className="w-full bg-white text-black mt-2">
         {/*} {sheduledStatusFinish?.length === 0 && (
           <div>
             <h2 className="text-center font-medium text-black">Nenhum serviço finalizado....</h2>

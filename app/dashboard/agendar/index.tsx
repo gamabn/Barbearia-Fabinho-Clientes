@@ -283,15 +283,15 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
       <InstallAppButton />
 
       <section className="flex flex-col gap-4 mt-4">
-        <div className="flex items-center justify-center gap-2 border-b border-gray-300 pb-2">
-          <div className="flex gap-3 bg-gray-200 p-2 rounded-lg">
-            <h2 className="flex items-center text-lg">
+        <div className="flex items-center justify-center gap-2 border-b border-gray-300 pb-2 ">
+          <div className="flex gap-3 bg-gray-200 p-2 rounded-lg max-md:flex-col">
+            <h2 className="flex items-center text-lg max-md:text-sm">
               <span>
                 <User color="rgb(49, 170, 33)" size={20} />
               </span>
               {clients?.name}
             </h2>
-            <p className="flex items-center text-lg">
+            <p className="flex items-center text-lg max-md:text-sm">
               <span>
                 <Phone size={20} color="rgb(49, 170, 33)" />
               </span>
@@ -313,8 +313,8 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
                       isSelected ? 'bg-blue-500 text-white' : 'bg-gray-100 text-black'
                     }`}
                   >
-                    <h2>{service.name}</h2>
-                    <p>R$ {service.price}</p>
+                    <h2 className="text-sm font-mediun">{service.name}</h2>
+                    <p className="text-sm font-mediun">R$ {service.price}</p>
                   </button>
                 );
               })}
@@ -340,7 +340,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
                   const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
                   return isPast;
                 }}
-                className="bg-white text-black w-full p-4 max-sm:w-sm rounded-lg shadow-lg border border-gray-400"
+                className="bg-white text-black w-full p-4 max-md:w-sm rounded-lg shadow-lg border border-gray-400"
                 classNames={{
                   caption_label: 'text-black',
                   weekdays: 'text-blue-500',

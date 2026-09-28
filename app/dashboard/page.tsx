@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col relative bg-white text-black min-h-screen ">
-      <div className="flex items-center justify-around p-3 border-b">
+      <div className="flex items-center justify-center gap-3 p-3 border-b">
         <button
           onClick={() => setActive(true)}
           className={`rounded-lg p-2 text-white font-mediun ${active ? 'bg-blue-500' : 'bg-black'}`}
@@ -41,7 +41,7 @@ export default function Dashboard() {
           Historico
         </button>
         <button onClick={handleLogout} className="absolute p-2  right-3 cursor-pointer">
-          <LogOut size={28} color="rgb(255, 0, 0)" />
+          <LogOut size={23} color="rgb(255, 0, 0)" />
         </button>
       </div>
       {/* Uso de operador ternário para trocar a exibição */}
