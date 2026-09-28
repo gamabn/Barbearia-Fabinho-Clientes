@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.DATABASE_URL;
 
 if (!uri) {
   throw new Error('Por favor, adicione a variável MONGODB_URI no arquivo .env ou na Vercel.');
