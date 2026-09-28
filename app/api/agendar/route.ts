@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import clientPromise from '@/app/lib/mongodb';
+import { getMongoClient } from '@/app/lib/mongodb';
 import { Status } from '../types/status';
 import { ObjectId } from 'mongodb';
 
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       duration: 0,
     };
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('test');
 
     const result = await db.collection('queueentries').insertOne(documentToInsert);
