@@ -37,7 +37,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-export function Login() {
+export default function Login() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | ''>('');
   const [loading, setLoading] = useState(false);
