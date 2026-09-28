@@ -1,13 +1,31 @@
 import { MongoClient } from 'mongodb';
 
-const url = process.env.DATABASE_URL || 'mongodb://localhost:27017';
+const uri = process.env.MONGODB_URI;
 
-if (!url) {
-  throw new Error('DATABASE_URL não definida');
+if (!uri) {
+  throw new Error('Por favor, adicione a variável MONGODB_URI no arquivo .env ou na Vercel.');
 }
 
-const client = new MongoClient(url);
+const options = {};
 
-const clientPromise = client.connect();
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
+
+if (process.env.NODE_ENV === 'development') {
+  // Em desenvolvimento, reutiliza a conexão global para não estourar o limite no hot-reload
+  const globalWithMongo = globalThis as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
+
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    globalWithMongo._mongoClientPromise = client.connect();
+  }
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+  // Em produção (Vercel)
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+}
 
 export default clientPromise;
