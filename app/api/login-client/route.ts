@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import clientPromise from '../../lib/mongodb';
+import { getMongoClient } from '../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { cookies } from 'next/headers';
 
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const { phone } = await request.json();
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('test');
 
     const user = await db.collection('clients').findOne({ phone });
@@ -53,7 +53,7 @@ export async function GET() {
       return NextResponse.json({ error: 'ID do cliente inválido' }, { status: 400 });
     }
 
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('test');
 
     const user = await db.collection('clients').findOne({

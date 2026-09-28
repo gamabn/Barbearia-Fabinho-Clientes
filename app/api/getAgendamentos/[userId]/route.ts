@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '@/app/lib/mongodb';
+import { getMongoClient } from '@/app/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { IQueueEntryWithServices } from '@/app/api/types';
 
@@ -12,7 +12,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ use
   }
 
   try {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('test');
 
     // Suporta busca por userId tanto como string quanto como ObjectId

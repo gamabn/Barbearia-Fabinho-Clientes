@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '../../lib/mongodb';
+import { getMongoClient } from '../../lib/mongodb';
 
 export async function POST(request: NextRequest) {
   try {
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db('test');
     const { name, phone } = await request.json();
     const data = { name, phone };
