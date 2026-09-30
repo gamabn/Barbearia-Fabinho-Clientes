@@ -8,11 +8,12 @@ export const formatarData = (dataISO: Date | string) => {
   }
 
   return data.toLocaleString('pt-BR', {
-    timeZone: 'America/Sao_Paulo',
+    timeZone: 'America/Bahia', // 👈 mude de Sao_Paulo pra Bahia
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    hour12: false,
   });
 };
