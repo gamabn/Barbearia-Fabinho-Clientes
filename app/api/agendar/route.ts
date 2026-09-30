@@ -4,6 +4,7 @@ import { Status } from '../types/status';
 import { ObjectId } from 'mongodb';
 
 export async function POST(request: NextRequest) {
+  //=================================
   try {
     const body = await request.json();
     const {
@@ -24,19 +25,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'O campo clientName é obrigatório.' }, { status: 400 });
     }
 
-    // Processamento da data e horário juntos
+    // ✅ CORREÇÃO DO PROCESSAMENTO DA DATA E HORÁRIO
     let scheduledDateTime = null;
 
     if (selectedDate) {
-      const dateObj = new Date(selectedDate);
-
-      // Se o horário "08:00" foi enviado, ajusta a hora e os minutos na data
       if (selectedTime && typeof selectedTime === 'string') {
-        const [hours, minutes] = selectedTime.split(':').map(Number);
-        dateObj.setHours(hours, minutes, 0, 0);
-      }
+        // Extrai apenas os números da data caso venha algo como "2026-09-30T..."
+        const dateOnly =
+          typeof selectedDate === 'string' ? selectedDate.split('T')[0] : selectedDate;
 
-      scheduledDateTime = dateObj;
+        // Formata com o fuso -03:00 (Brasília / Bahia)
+        // Exemplo: "2026-09-30T14:00:00-03:00"
+        const isoStringLocal = `${dateOnly}T${selectedTime}:00-03:00`;
+        scheduledDateTime = new Date(isoStringLocal);
+      } else {
+        scheduledDateTime = new Date(selectedDate);
+      }
     }
 
     const now = new Date();
@@ -45,7 +49,7 @@ export async function POST(request: NextRequest) {
       clientName: clientName,
       userId: userId || null,
       barberId: barberId || null,
-      scheduledAt: scheduledDateTime, // Grava como ISODate com a hora certa
+      scheduledAt: scheduledDateTime, // Grava a data no fuso correto
       status: Status.SCHEDULED,
       estimatedDuration: Number(estimatedDuration || 0),
       totalPrice: Number(totalPrice || 0),
