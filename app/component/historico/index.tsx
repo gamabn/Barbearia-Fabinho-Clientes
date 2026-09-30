@@ -2,11 +2,12 @@
 //import { getClients } from '../Clients';
 //import { fetchHistoricoAgendamento } from '../agendamentosGet';
 //import { clientProps, IQueueEntryWithServices } from '@/app/api/types';
-import { format } from 'date-fns';
+//import { format } from 'date-fns';
 import { User, CalendarDays, Scissors } from 'lucide-react';
 import { Status } from '@/app/api/types/status';
 //import { Notification } from '../notificationDate';
 import { useAgendamentosHoook } from '../hook/useAgendamentos';
+import { formatarData } from '../formatDate/fotmatDate';
 
 export function Historico() {
   // const { clients } = useClientHook();
@@ -82,7 +83,8 @@ export function Historico() {
                     <span>
                       <CalendarDays color="#00ff" />
                     </span>
-                    {format(sh.scheduledAt, 'dd-MM-yyy HH:mm')}
+                    {/*} {(formatsh.scheduledAt, 'dd-MM-yyy HH:mm')}*/}
+                    {formatarData(sh.scheduledAt)}
                   </p>
 
                   <p className="flex items-center gap-2 p-2 font-bold text-lg text-green-500">
@@ -137,7 +139,8 @@ export function Historico() {
                 <span>
                   <CalendarDays color="#00ff" />
                 </span>
-                {format(ag.scheduledAt, 'dd-MM-yyyy HH:mm')}
+
+                {formatarData(ag.scheduledAt)}
               </p>
 
               <p className="flex items-center gap-2 p-2 font-bold text-lg text-green-500">

@@ -69,6 +69,20 @@ export async function GET(_request: Request, { params }: { params: Promise<{ use
       ])
       .toArray();
 
+    // 🔧 Ajuste de fuso horário (UTC -> America/Sao_Paulo)
+    {
+      /*}   const agendamentosAjustados = agendamentos.map((ag) => ({
+      ...ag,
+      scheduledAt: new Date(ag.scheduledAt).toLocaleString('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    }));  */
+    }
     return NextResponse.json(agendamentos, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar agendamentos:', error);
