@@ -41,7 +41,7 @@ export default function Dashboard() {
           Historico
         </button>
         <button onClick={handleLogout} className="absolute p-2  right-1 cursor-pointer">
-          <LogOut size={23} color="rgb(255, 0, 0)" />
+          <LogOut size={25} color="rgb(255, 0, 0)" />
         </button>
       </div>
       {/* Uso de operador ternário para trocar a exibição */}

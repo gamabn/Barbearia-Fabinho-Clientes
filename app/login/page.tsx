@@ -101,7 +101,7 @@ export default function Login() {
       <h1 className="text-2xl font-bold text-gray-800 mb-4 max-sm:text-xl">Login</h1>
 
       <Image
-        src="/icon-192.png"
+        src="/icon-xx.png"
         alt="Logo"
         width={100}
         height={100}

@@ -46,6 +46,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   const servicesRef = useRef<HTMLDivElement>(null);
   const resumoRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { clients } = useClientHook();
   const { services, servicesLoading } = useServiceHook();
@@ -203,6 +204,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   console.log('Cliente Unico', clients?.id);
 
   async function handleAgend() {
+    setLoading(true);
     setMessageApi(null);
     console.log('dados do agendamento', { clients, selectedDate, selectService, selectedTime });
     if (!clients || !selectService || !selectedDate || !selectedTime) {
@@ -236,6 +238,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
 
         return;
       }
+      setLoading(false);
       setActive(true);
       setSelectService(null);
       setSelectedDate(undefined);
@@ -244,6 +247,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
       // setMessageApi('Agendamento realizado com sucesso!');
     } catch (error) {
       setMessageApi('Erro da api');
+      setLoading(false);
       console.error(error);
     }
   }
@@ -388,17 +392,14 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
       <section ref={resumoRef} className="mb-3">
         <div>
           {selectedTime && (
-            <div
-              //  ref={resumoRef}
-              className="flex flex-col gap-2 w-full p-3 border border-gray-400 shadow-xl rounded-lg"
-            >
+            <div className="flex flex-col gap-2 w-full p-3 border border-gray-400 shadow-xl rounded-lg">
               <h2 className="text-center font-semibold text-xl p-2">Resumo do agendamento</h2>
 
-              <div className=" bg-gray-100 p-2 rounded-lg">
+              <div className="bg-gray-100 p-2 rounded-lg">
                 <h3 className="text-lg font-semibold text-start">Serviços</h3>
-                <div className="flex items-center  gap-3">
+                <div className="flex items-center gap-3">
                   <p>{selectService?.name}</p>
-                  <p className="text-green-500 ">R$ {selectService?.price}</p>
+                  <p className="text-green-500">R$ {selectService?.price}</p>
                 </div>
               </div>
 
@@ -410,15 +411,29 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
                   <p>{selectedTime}</p>
                 </div>
               </div>
+
               {messageApi && (
                 <span className="text-red-500 text-center font-mediun p-3 text-lg">
                   {messageApi}
                 </span>
               )}
+
               <div className="flex items-center justify-around p-3">
-                <div>
-                  <button onClick={handleAgend} className="bg-blue-500 p-2 rounded-lg text-white">
-                    Agendar
+                <div className="flex items-center gap-3">
+                  <button
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors max-sm:text-sm"
+                    onClick={handleAgend}
+                    disabled={loading}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <span className={loading ? 'inline-block' : 'hidden'}>
+                        <span
+                          className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span>Entrar</span>
+                    </span>
                   </button>
                 </div>
 
