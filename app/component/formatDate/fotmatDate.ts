@@ -4,7 +4,7 @@ export const formatarData = (dataISO: Date | string) => {
   let data: Date;
 
   if (typeof dataISO === 'string') {
-    // Substitui 'T' por ' ' para o JS interpretar como hora local do dispositivo,
+    //   // Substitui 'T' por ' ' para o JS interpretar como hora local do dispositivo,
     // ou mantém se já for outro formato.
     const dataTratada =
       dataISO.includes('T') && !dataISO.endsWith('Z') ? dataISO.replace('T', ' ') : dataISO;
