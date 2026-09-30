@@ -67,26 +67,6 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   // Lista fixa de horários do estabelecimento
   const timeSlots = useMemo(() => generateTimeSlots(8, 18, 30), []);
 
-  //===================================================================
-  // const { data: clients } = useQuery<clientProps>({
-  //  queryKey: ['clients'],
-  //  queryFn: getClients,
-  // });
-  //=====================================================================
-
-  // console.log('Id do cliente', clients);
-
-  //==========================================================================================
-  // const { data: services = [], isLoading: servicesLoading } = useQuery<serviceProps[]>({
-  //  queryKey: ['services'],
-  //  queryFn: Agend,
-  // });
-  //==================================================================
-  // const {data: agend = [], isLoading:loadindAgend} = useQuery<any>({
-  // queryKey: ["agendamentos"],
-  //  queryFn: getAgendamentos
-  // })
-  // Query para buscar agendamentos ocupados no dia selecionado
   const formattedDate = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
 
   // HORÁRIOS OCUPADOS DA DATA
@@ -115,30 +95,6 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   }, [selectedTime]);
 
   console.log('Horários ocupados:', occupiedTimes);
-  // console.log("todos os agendamentos", agend)
-  // console.log("Selected Date:", selectedDate);
-
-  {
-    /*const occupiedTimes = agend
-        .filter((agendamento: any) => {
-            if (!agendamento.scheduledAt || !formattedDate) {
-            return false;
-            }
-
-            if (agendamento.status === "canceled") {
-            return false;
-            }
-
-            const date = new Date(agendamento.scheduledAt);
-
-            return format(date, "yyyy-MM-dd") === formattedDate;
-        })
-        .map((agendamento: any) => {
-            const date = new Date(agendamento.scheduledAt);
-
-            return format(date, "HH:mm");
-     });   */
-  }
 
   function handleServiceDate(dataService: serviceProps) {
     setSelectId(String(dataService._id));
@@ -211,6 +167,10 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
       setMessageApi('Preencha todos os campos');
       return;
     }
+
+    const [hora, minuto] = selectedTime.split(':');
+    const dataAgendamento = new Date(selectedDate);
+    dataAgendamento.setHours(parseInt(hora), parseInt(minuto), 0, 0);
 
     try {
       const data = {
