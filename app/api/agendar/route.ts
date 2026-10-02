@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getMongoClient } from '@/app/lib/mongodb';
 import { Status } from '../types/status';
 import { ObjectId } from 'mongodb';
-import { sendLatestAppointmentNotification } from '../../../lib/telegramNotifier'; // Importar a função de notificação
+import { sendLatestAppointmentNotification } from '../../component/telegramNotifier'; // Importar a função de notificação
 
 export async function POST(request: NextRequest) {
   //=================================
@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
     }
 
     // ✅ CORREÇÃO DO PROCESSAMENTO DA DATA E HORÁRIO
-    let scheduledDateTime = null;
+    // let scheduledDateTime = null;
+    // ✅ PROCESSAMENTO E VALIDAÇÃO DA DATA/HORA
+    let scheduledDateTime: Date | null = null;
 
     if (selectedDate) {
       if (selectedTime && typeof selectedTime === 'string') {
@@ -41,6 +43,13 @@ export async function POST(request: NextRequest) {
         scheduledDateTime = new Date(isoStringLocal);
       } else {
         scheduledDateTime = new Date(selectedDate);
+      }
+
+      if (isNaN(scheduledDateTime.getTime())) {
+        return NextResponse.json(
+          { error: 'A data ou hora fornecida é inválida.' },
+          { status: 400 }
+        );
       }
     }
 
@@ -64,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     const client = await getMongoClient();
     const db = client.db('test');
-
+    //=====================
     const result = await db.collection('queueentries').insertOne(documentToInsert);
 
     // Salva a relação com o(s) serviço(s) na coleção 'QueueService'
@@ -90,7 +99,20 @@ export async function POST(request: NextRequest) {
     } else {
       console.warn('[API agendar] Nenhum serviceId informado na requisição');
     }
+    //===================================================================================
+    // if (queueServicesDocs.length > 0) {
+    //  await db.collection('QueueService').insertMany(queueServicesDocs);
+    //  console.log('[API agendar] Gravado com sucesso na QueueService:', queueServicesDocs);
+    //  } else {
+    //   console.warn(
+    //    '[API agendar] Nenhum serviceId válido encontrado para gravar na QueueService'
+    //  );
 
+    // }
+    //  } else {
+    //  console.warn('[API agendar] Nenhum serviceId informado na requisição');
+    // }
+    //===============================================================================================
     // Após criar o agendamento com sucesso, tentar enviar notificação via Telegram
     try {
       console.log('[API agendar] Chamando notificação do Telegram diretamente...');
