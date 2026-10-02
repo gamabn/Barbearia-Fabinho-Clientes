@@ -15,8 +15,8 @@ import { getAgendamentos } from '@/app/component/getAgendamentos';
 import { useClientHook, useServiceHook } from '@/app/component/hook/useAgendamentos';
 import { InstallAppButton } from '../../component/InstallButton';
 
-// Função utilitária para gerar os horários de funcionamento (ex: 08:00 às 18:00)
-function generateTimeSlots(startHour = 8, endHour = 18, intervalMinutes = 30): string[] {
+// Função utilitária para gerar os horários de funcionamento (ex: 08:00 às 20:00)
+function generateTimeSlots(startHour = 8, endHour = 20, intervalMinutes = 30): string[] {
   const slots: string[] = [];
   const current = new Date();
   current.setHours(startHour, 0, 0, 0);
@@ -65,7 +65,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   }, [active, onMudarAba]);
 
   // Lista fixa de horários do estabelecimento
-  const timeSlots = useMemo(() => generateTimeSlots(8, 18, 30), []);
+  const timeSlots = useMemo(() => generateTimeSlots(8, 20, 30), []);
 
   const formattedDate = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
 
