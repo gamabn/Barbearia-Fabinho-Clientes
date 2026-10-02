@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getMongoClient } from '@/app/lib/mongodb';
 import { Status } from '../types/status';
 import { ObjectId } from 'mongodb';
+import { sendLatestAppointmentNotification } from '../../../lib/telegramNotifier'; // Importar a função de notificação
 
 export async function POST(request: NextRequest) {
   //=================================
@@ -88,6 +89,19 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.warn('[API agendar] Nenhum serviceId informado na requisição');
+    }
+
+    // Após criar o agendamento com sucesso, tentar enviar notificação via Telegram
+    try {
+      console.log('[API agendar] Chamando notificação do Telegram diretamente...');
+      const notificationResult = await sendLatestAppointmentNotification(); // Chama a função refatorada
+      if (!notificationResult.success) {
+        console.warn(
+          `[API agendar] Falha ao enviar notificação do Telegram: ${notificationResult.message}`
+        );
+      }
+    } catch (botError) {
+      console.error('[API agendar] Erro ao tentar notificar via bot do Telegram:', botError);
     }
 
     return NextResponse.json(
