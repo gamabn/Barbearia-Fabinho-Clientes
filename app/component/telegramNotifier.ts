@@ -1,15 +1,21 @@
 import { getMongoClient } from '../lib/mongodb';
-import * as TelegramBot from 'node-telegram-bot-api';
+import { Bot } from 'node-telegram-bot-api';
 
 const ENV_TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ENV_TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-// Defina o fuso horário para o salão.
+// LOG TEMPORÁRIO
+console.log('[DEBUG] token len:', ENV_TELEGRAM_BOT_TOKEN?.length);
+console.log('[DEBUG] token prefix:', ENV_TELEGRAM_BOT_TOKEN?.substring(0, 12));
+console.log('[DEBUG] token suffix:', ENV_TELEGRAM_BOT_TOKEN?.slice(-4));
+console.log('[DEBUG] chat_id:', ENV_TELEGRAM_CHAT_ID);
+console.log('[DEBUG] token tem aspas?', ENV_TELEGRAM_BOT_TOKEN?.startsWith('"'));
+
 const SALON_TIMEZONE = 'America/Sao_Paulo';
 
-let botInstance: TelegramBot | null = null;
+let botInstance: Bot | null = null;
 
-function getBotInstance(): TelegramBot | null {
+function getBotInstance(): Bot | null {
   if (botInstance) {
     return botInstance;
   }
@@ -18,8 +24,14 @@ function getBotInstance(): TelegramBot | null {
 
   if (token && token !== 'SEU_TOKEN_AQUI' && token.length > minTokenLength) {
     console.log('[TelegramNotifier] Inicializando nova instância do TelegramBot.');
-    botInstance = new TelegramBot(token);
+
+    // Resolve o construtor em tempo de execução para evitar problemas do Turbopack
+    // const pkg = require('node-telegram-bot-api');
+    // v2: importação estática do pacote dual ESM+CJS
+    botInstance = new Bot(token);
     return botInstance;
+
+    //  return botInstance;
   } else {
     if (!token) {
       console.warn('[TelegramNotifier] Bot não inicializado: TELEGRAM_BOT_TOKEN não definido.');
@@ -57,7 +69,6 @@ export async function sendLatestAppointmentNotification() {
   }
 
   try {
-    // Conexão obtida sob demanda para evitar problemas com Top-Level await no escopo do arquivo
     const client = await getMongoClient();
     const db = client.db('test');
 
@@ -85,7 +96,6 @@ export async function sendLatestAppointmentNotification() {
     const cliente = latestAgendamento.clientName || 'Cliente não informado';
     const scheduledAtFromDb = latestAgendamento.scheduledAt;
 
-    // Formatação da data e hora no fuso horário local
     const dataAgendamento = new Intl.DateTimeFormat('en-GB', {
       timeZone: SALON_TIMEZONE,
       day: '2-digit',
@@ -99,10 +109,6 @@ export async function sendLatestAppointmentNotification() {
       minute: '2-digit',
       hourCycle: 'h23',
     }).format(scheduledAtFromDb);
-
-    console.log(
-      `[TelegramNotifier] Data formatada: ${dataAgendamento}, Hora formatada: ${horaAgendamento} (para ${SALON_TIMEZONE})`
-    );
 
     const nomesServicos =
       latestAgendamento.queueServices
@@ -122,7 +128,12 @@ Serviço(s): ${nomesServicos}
 Barbeiro: ${nomeBarbeiro}
 -----------------------------------
 `;
-    await bot.sendMessage(ENV_TELEGRAM_CHAT_ID, mensagem.trim());
+    // ✅ v2
+    await bot.api.sendMessage({
+      chat_id: ENV_TELEGRAM_CHAT_ID,
+      text: mensagem.trim(),
+    });
+    // await bot.sendMessage(ENV_TELEGRAM_CHAT_ID, mensagem.trim());
     return { success: true, message: 'Notificação enviada.' };
   } catch (error) {
     console.error('[TelegramNotifier] ERRO AO ENVIAR MENSAGEM TELEGRAM:', error);
