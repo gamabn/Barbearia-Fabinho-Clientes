@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
     const client = await getMongoClient();
     const db = client.db('test');
     const { name, phone } = await request.json();
-    const data = { name, phone };
+    const cleanPhone = String(phone).replace(/\D/g, '');
+    const data = { name, phone: cleanPhone };
     console.log('Dados recebidos:', data);
 
     const result = await db.collection('clients').insertOne(data);

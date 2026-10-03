@@ -12,16 +12,24 @@ import { useRouter } from 'next/navigation';
 
 const cadastroSchema = z.object({
   name: z.string().min(1, { message: 'O nome é obrigatório.' }),
-  phone: z.string().refine(
-    (value) =>
-      /^(?:\(\d{2}\)\s?)?\d{9}$/.test(value) || // (DD) 999999999
-      /^\d{2}\s\d{9}$/.test(value) || // DD 999999999
-      /^\d{11}$/.test(value), // 11999999999
-    {
-      message: 'O número de telefone deve estar no formato (DD) 999999999 ou similar.',
-    }
-  ),
+  phone: z
+    .string()
+    .min(1, 'O telefone é obrigatório')
+    .refine(
+      (val) => /^\(\d{2}\) \d{5}-\d{4}$/.test(val),
+      'O número de telefone deve estar no formato (DD) 99999-9999'
+    ),
 });
+//phone: z.string().refine(
+//   (value) =>
+//  /^(?:\(\d{2}\)\s?)?\d{9}$/.test(value) || // (DD) 999999999
+//  /^\d{2}\s\d{9}$/.test(value) || // DD 999999999
+//  /^\d{11}$/.test(value), // 11999999999
+// {
+//   message: 'O número de telefone deve estar no formato (DD) 999999999 ou similar.',
+//  }
+// ),
+//});
 
 type CadastroForm = z.infer<typeof cadastroSchema>;
 
@@ -88,9 +96,10 @@ export default function Cadastro() {
         <Input
           type="text"
           name="phone"
-          placeholder="Digite seu telefone"
+          placeholder="Digite seu telefone (DD)99999-9999"
           register={register}
           error={errors.phone?.message}
+          isPhone={true} // Ativa a máscara para este input
         />
 
         <button
@@ -109,7 +118,7 @@ export default function Cadastro() {
 
         <Link
           href="/login"
-          className="text-sm text-center font-extralight text-[#2323da] py-3 hover:underline cursor-pointer "
+          className="text-md text-center font-extralight text-[#2323da] py-3 hover:underline cursor-pointer "
         >
           Se ja tem conta? Entrar
         </Link>

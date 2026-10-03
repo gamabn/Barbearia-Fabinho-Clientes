@@ -157,7 +157,7 @@ export default function Login() {
 
         <Link
           href="/cadastro"
-          className="text-sm text-center font-extralight text-[#2323da] py-3 hover:underline cursor-pointer "
+          className="text-md text-center font-extralight text-[#2323da] py-3 hover:underline cursor-pointer "
         >
           Se nao tem conta? Cadastre-se
         </Link>

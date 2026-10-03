@@ -47,6 +47,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   const resumoRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  //const [clientEdit, setClientEdit] = useState<string | null>(null);
 
   const { clients } = useClientHook();
   const { services, servicesLoading } = useServiceHook();
