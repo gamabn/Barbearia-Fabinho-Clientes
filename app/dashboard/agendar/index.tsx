@@ -47,7 +47,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   const resumoRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  //const [clientEdit, setClientEdit] = useState<string | null>(null);
+  const [clientEdit, setClientEdit] = useState<string | null>(null);
 
   const { clients } = useClientHook();
   const { services, servicesLoading } = useServiceHook();
@@ -175,7 +175,7 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
 
     try {
       const data = {
-        clientName: clients?.name, // Extrai 'Flavio G Silva' do objeto
+        clientName: clientEdit ?? clients?.name ?? '', // Extrai 'Flavio G Silva' do objeto
         userId: clients?.id, // Extrai o ID do cliente
         serviceId: selectId || selectService?._id, // Envia o ID do serviço selecionado
         estimatedDuration: selectService?.duration, // Extrai a duração (ex: 30)
@@ -355,6 +355,15 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
           {selectedTime && (
             <div className="flex flex-col gap-2 w-full p-3 border border-gray-400 shadow-xl rounded-lg">
               <h2 className="text-center font-semibold text-xl p-2">Resumo do agendamento</h2>
+
+              <div className="bg-gray-100 flexs p-2 rounded-lg text-black">
+                <input
+                  type="text"
+                  value={clientEdit ?? clients?.name ?? ''}
+                  onChange={(e) => setClientEdit(e.target.value)}
+                  className="w-full border text-lg text-gray-600 rounded-md h-11 mb-3 p-2 max-sm:text-sm"
+                />
+              </div>
 
               <div className="bg-gray-100 p-2 rounded-lg">
                 <h3 className="text-lg font-semibold text-start">Serviços</h3>
