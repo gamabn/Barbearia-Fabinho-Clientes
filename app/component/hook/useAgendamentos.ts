@@ -30,6 +30,15 @@ export async function fetchHistoricoAgendamento(userId: string | null) {
   console.log('Agendamentos do cliente:', data);
   return data;
 }
+export async function Bloqueio() {
+  const res = await fetch(`/api/blocket`);
+  const data = await res.json();
+  console.log('Dias bloqueados', data);
+  if (!res) {
+    throw new Error('dias bloquedos nao encontrados');
+  }
+  return data;
+}
 
 export async function useAGetService() {
   const response = await fetch('api/service', {
@@ -46,6 +55,14 @@ export async function useAGetService() {
   const data = await response.json();
   console.log('Serviços do barbeiro', data);
   return data;
+}
+
+export function useBloqueio() {
+  const { data: bloqueio = [] } = useQuery({
+    queryKey: ['bloqueio'],
+    queryFn: Bloqueio,
+  });
+  return bloqueio;
 }
 export function useServiceHook() {
   const { data: services = [], isLoading: servicesLoading } = useQuery<serviceProps[]>({

@@ -12,7 +12,12 @@ import { ptBR } from 'date-fns/locale';
 import { serviceProps } from '@/app/api/types';
 import { format, isToday } from 'date-fns';
 import { getAgendamentos } from '@/app/component/getAgendamentos';
-import { useClientHook, useServiceHook } from '@/app/component/hook/useAgendamentos';
+import {
+  useClientHook,
+  useServiceHook,
+  useBloqueio,
+  Bloqueio,
+} from '@/app/component/hook/useAgendamentos';
 import { InstallAppButton } from '../../component/InstallButton';
 
 // Função utilitária para gerar os horários de funcionamento (ex: 08:00 às 20:00)
@@ -36,6 +41,10 @@ interface AgendarProps {
   agendar: boolean;
   onMudarAba: () => void;
 }
+type Bloqueio = {
+  _id: string;
+  date: string | Date;
+};
 
 export function Agendar({ agendar, onMudarAba }: AgendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -51,8 +60,18 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
 
   const { clients } = useClientHook();
   const { services, servicesLoading } = useServiceHook();
+  //const { bloqueio } = useBloqueio<Bloqueio[]>();
+
+  const bloqueio = useBloqueio();
+  console.log('Resultado completo do hook:', bloqueio);
 
   console.log('testando o agendar', agendar);
+
+  // const { bloqueio } = resultado;
+
+  useEffect(() => {
+    console.log('Bloqueio atualizado:', bloqueio);
+  }, [bloqueio]);
 
   useEffect(() => {
     if (active) {
@@ -213,6 +232,16 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
     }
   }
 
+  const diasBloqueados = ((bloqueio ?? []) as Bloqueio[]).map((item: Bloqueio) => {
+    const data = new Date(item.date);
+
+    return [
+      data.getUTCFullYear(),
+      String(data.getUTCMonth() + 1).padStart(2, '0'),
+      String(data.getUTCDate()).padStart(2, '0'),
+    ].join('-');
+  });
+
   if (active) {
     return (
       <div className="flex flex-col flex-grow items-center justify-center bg-white w-full  min-h-screen text-black p-6">
@@ -302,8 +331,23 @@ export function Agendar({ agendar, onMudarAba }: AgendarProps) {
                 onSelect={setSelectedDate}
                 locale={ptBR}
                 disabled={(date) => {
-                  const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
-                  return isPast;
+                  // Bloqueia datas anteriores a hoje
+                  const hoje = new Date();
+                  hoje.setHours(0, 0, 0, 0);
+
+                  if (date < hoje) {
+                    return true;
+                  }
+
+                  // Formata a data selecionada pelo calendário
+                  const dataFormatada = [
+                    date.getFullYear(),
+                    String(date.getMonth() + 1).padStart(2, '0'),
+                    String(date.getDate()).padStart(2, '0'),
+                  ].join('-');
+
+                  // Bloqueia os dias cadastrados no banco
+                  return diasBloqueados.includes(dataFormatada);
                 }}
                 className="bg-white text-black w-full p-4 max-md:w-sm rounded-lg shadow-lg border border-gray-400"
                 classNames={{
